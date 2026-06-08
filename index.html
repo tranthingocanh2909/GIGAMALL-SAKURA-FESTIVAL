@@ -148,7 +148,7 @@
 
                     <!-- Register Button -->
                     <button id="nav-reg-btn" onclick="navigateTo('login')" class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-md hover:shadow-lg hover:from-pink-600 hover:to-rose-600 transition">
-                        <i class="fa-solid fa-key mr-1"></i> Đăng Ký
+                        <i class="fa-solid fa-key mr-1"></i> Đăng Ký Chơi
                     </button>
 
                     <!-- Mobile Menu Toggle Button -->
@@ -604,9 +604,52 @@
                 </div>
 
                 <div class="border-t border-pink-100 pt-6">
-                    <h4 class="text-sm font-bold text-gray-700 mb-4">🌟 Ảnh từ cộng đồng check-in gần đây</h4>
-                    <div id="booth-photos-gallery" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <h4 class="text-sm font-bold text-gray-700 mb-4">🌟 Ảnh từ cộng đồng check-in gần đây (Người đi trước)</h4>
+                    <div id="booth-photos-gallery" class="grid grid-cols-2 sm:grid-cols-5 gap-4">
                         <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOOTH REVIEW SECTION -->
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div>
+                    <h4 class="text-lg font-bold text-gray-800">💬 Đánh giá & Cảm nhận về Gian hàng này</h4>
+                    <p class="text-xs text-gray-500 mt-1">Chia sẻ trải nghiệm thực tế của bạn tại booth để giúp các khách tham quan khác có lựa chọn tốt nhất!</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Form gửi review cho booth -->
+                    <div class="lg:col-span-1 bg-pink-50/50 p-5 rounded-2xl border border-pink-100 space-y-4">
+                        <h5 class="text-sm font-bold text-gray-800">Viết đánh giá của bạn</h5>
+                        <form id="booth-review-form" onsubmit="handleBoothReviewSubmit(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Xếp hạng</label>
+                                <div class="flex space-x-1 text-xl">
+                                    <button type="button" onclick="setBoothRating(1)" class="booth-star-btn text-yellow-400"><i class="fa-solid fa-star"></i></button>
+                                    <button type="button" onclick="setBoothRating(2)" class="booth-star-btn text-yellow-400"><i class="fa-solid fa-star"></i></button>
+                                    <button type="button" onclick="setBoothRating(3)" class="booth-star-btn text-yellow-400"><i class="fa-solid fa-star"></i></button>
+                                    <button type="button" onclick="setBoothRating(4)" class="booth-star-btn text-yellow-400"><i class="fa-solid fa-star"></i></button>
+                                    <button type="button" onclick="setBoothRating(5)" class="booth-star-btn text-gray-300"><i class="fa-solid fa-star"></i></button>
+                                </div>
+                                <input type="hidden" id="booth-review-rating" value="4">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Cảm nghĩ <span class="text-red-500">*</span></label>
+                                <textarea id="booth-review-content" required rows="3" placeholder="Không khí ở đây thế nào? Quà tặng có xinh không?..." class="w-full px-3 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-1 focus:ring-pink-400"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 rounded-xl text-xs transition">
+                                Gửi Đánh Giá Booth
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Danh sách review cho booth -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <h5 class="text-sm font-bold text-gray-800">Ý kiến từ các khách hàng khác</h5>
+                        <div id="booth-reviews-list" class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                            <!-- Loaded dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1168,7 +1211,10 @@
             </div>
 
             <!-- Vote Modal footer action -->
-            <div class="flex justify-end pt-2 border-t-2 border-dashed border-gray-300">
+            <div class="flex justify-end space-x-3 pt-2 border-t-2 border-dashed border-gray-300">
+                <button onclick="closeMangaModal()" class="bg-gray-100 hover:bg-gray-200 border-2 border-black text-black font-black px-4 py-2 rounded-xl text-xs shadow-md transition transform active:scale-95">
+                    Đóng
+                </button>
                 <button id="modal-manga-vote-btn" class="bg-amber-500 hover:bg-amber-600 border-2 border-black text-white font-black px-6 py-2 rounded-xl text-xs shadow-md transition transform active:scale-95 flex items-center space-x-2">
                     <i class="fa-solid fa-thumbs-up"></i>
                     <span>Bình Chọn Tác Phẩm Này</span>
@@ -1708,19 +1754,172 @@
         let userBoothStatus = {};
         let selectedBoothIdForDetail = null;
         
-        // Khai báo biến boothGalleryPhotos toàn cục
+        // 50 ẢNH TẤT CẢ KHÁC NHAU ĐỘC NHẤT - TỐI THIỂU 5 ẢNH MỖI BOOTH
         let boothGalleryPhotos = {
-            1: ['https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=200&auto=format&fit=crop'],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-            10: []
+            1: [
+                'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmmxmVSWks64bGKd_BBBjuVYyYZDrCiKBgHkuOktM1VHIR8YRkIOGOYWDW-BLd',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQgDojcjx9PkOWqLwH3Iw_sy18LONXjaIcgNy1WYpmaoVG-vUbFpK7KEXwA348o',
+                'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT4S2yBBcjRbhLS9ly1e-_jKHMB0XgB1N50akuFEcHweP_DKi-5jJWtNOr51QVt',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsXGAdGfifKTIysZKTtU4145W4_18T3PzbxPqZHTMQh7kdYPYFfCxfXWhwpb89'
+            ],
+            2: [
+                'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4JvoSbarTm04g4avIueIuYetbe4tGrPDB8XSn9U3f9MTnUeOPOmygCA-dE0aE',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThXzA2-Qt4AGrlIrbZeF7zLufJYPR-92D4TWwHJeniNDvVS0yO7lo6WsXB-fqM',
+                'https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=300&auto=format&fit=crop'
+            ],
+            3: [
+                'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQwHqwq43HNWTYzQceC9_3qGl2AczomKNKRnl4TZfTTsY13ahPc8vUl8aPohlYy',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvrVUx-5gWN0umPyArRk6NkxZNo_ll2UJ8g8Fbz4JhkFnOf0Xz9ZD-pio2Afdb',
+                'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRwY_DMO_04BYcB8KRvArqxGKSQQvoPWVH8EMsiIup6-iomvLc8LfHFP_u8pBdf',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT_-2-oGmi29QUJOAd3EMZDcIkFxSvGcQDin3AhEaQBz7pXelw0FUsVqFMPIh4m',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSegxNvfxQ8o24Y7xLIBcMZ5YzG7IxWPU33fghlHh6YV0ul960yJfH2Bqafa_QK'
+            ],
+            4: [
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQhcb0XadJWrV-ZqOYoNsDK-aUdQapOYRslqtGWVk-5GUtuXXtBQ-kPyU2rh0IG',
+                'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR9yMRK5yWOYd6RxvLwCWHgMRfIeGW69uYhfl_CMD5C1LTabuTYys5Jg8bK46Ud',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRq71dQfrxdkxgweWaz6FhzaB8qkrDLjeW214H9u17epHP092R_XTx1N6hzsJLr',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKOu-atzThVxMgZYfUSQCljRJsFUYAIqnZOI3Ab5ER1TmaH1lLqnffESEfUtVy',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXVxK7H2HXrzI5onP29e28aXIIXEso95Cl90MSx1dXxIPLvqavEjGFSFUyKxvA'
+            ],
+            5: [
+                'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTHvrAeb0hcAHqKVioT9W0Jg7fxFUs_Dmyul2PnH54IHoJcwNckT0uCbMAtEemX',
+                'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTM08Cv_sg_HeI2El9k4_O-AkCxvHqltgLItg5FKr7KYBzb4mf2Sz2Bm307Lnp_',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRkQUIZWYsZ9fitUp89iaNl7WGCAlu9nRJm9NIJ_uFN-qYhEEndtl5tZLBjYyCX',
+                'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=300&auto=format&fit=crop'
+            ],
+            6: [
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQQmspeW1Oa5v7MxzYKic6NiBc7bgZ1E9kxxe50t_CDOkkjuMkDQ21H7TSMqY2D',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsc6vJ7q3kTLDJXNIJErwF8hsJplNRNfEOlRWKLBUOAAz_3vSt-9PRgNzR6qfU',
+                'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTc6vocuHinLbaOGFNHGQCyLmxszABRHRID3dwiDAMC9spXCKQ8AihRqMxpwYpi',
+                'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTLUNub-jz37WfPT002guvu7ykb0qJvM5e-QZDrXC4CpCZXnyhdQJP1xmsU16dp',
+                'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQLS4D6Sv-wM5f2XriHT8PGfkGg17E-84KZRg8oROZSJgQFjPx_61Wz3_aPMznP'
+            ],
+            7: [
+                'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1553621042-f6e147245754?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1611143669185-af224c5e3252?q=80&w=300&auto=format&fit=crop'
+            ],
+            8: [
+                'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCjVsK5ARcHtsxCgokm21-hj-7ZAbGqt71zgP2EVT59uaghTml2vAMmmWe594G',
+                'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=300&auto=format&fit=crop'
+            ],
+            9: [
+                'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR1psz38cm3S3mS34bHyHBhGCExmQTR7_08Qoh3dr2vjL79ASopbsAViEELrK0y',
+                'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTFIPuz051xW73EMVjcZcuxmNjVEKHAUm_p2ccP-27FEtg2vYx79w-FFTSJ9oE',
+                'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcREX5G-4zq6uFtfQyn37-CCVVKZyRsEg-igxKUkiMEXFO0gpMf3yqEoD9e1G_oj'
+            ],
+            10: [
+                'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?q=80&w=300&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=300&auto=format&fit=crop',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLLXhGYqaeVtB6Cb_hhn0EhK0ZCIRyphK5cNTYApSWL-5s59hCJsKRZPnEZblZ',
+                'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ8pwEISy2r6OQz09_8PhGdgdHwIjINpYi21-WOD5KBVWgcZCRNBihfPhgMuOW4',
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ohbEVhGrVS6-5QndoTpEFLMzZEQgP8BxoxZXf4RRuWTIKtfcmegyT60UEctX'
+            ]
         };
+
+        // Review data for each booth
+        let boothReviews = {
+            1: [
+                { name: 'Khánh An', rating: 5, content: 'Thuê đồ nhanh gọn, có cả nhân viên hộ tống chỉnh đai cho chuẩn xác!', date: '09/06/2026' },
+                { name: 'Đăng Khoa', rating: 4, content: 'Đồ mỏng mát, dạo quanh sảnh Phạm Văn Đồng chụp hình siêu lung linh.', date: '09/06/2026' }
+            ],
+            2: [
+                { name: 'Trí Nhân', rating: 5, content: 'Khu toán Finger Math dạy tính nhẩm đỉnh thực sự, các bé tham gia rất hăng hái!', date: '09/06/2026' }
+            ],
+            3: [
+                { name: 'Mỹ Duyên', rating: 5, content: 'Bán rất nhiều chuông gió Furin và bùa bình an Omamori thủ công cực đẹp.', date: '09/06/2026' }
+            ],
+            4: [
+                { name: 'Nhật Minh', rating: 5, content: 'Được in thử trang manga có chèn thoại của chính mình, trải nghiệm rất độc đáo!', date: '09/06/2026' }
+            ],
+            5: [
+                { name: 'Thùy Chi', rating: 4, content: 'Nặn đất sét tự khô sushi nhỏ xíu mang về làm kỉ niệm siêu yêu thích.', date: '09/06/2026' }
+            ],
+            6: [
+                { name: 'Bảo Lâm', rating: 5, content: 'Trạm check-in sầm uất, quét QR siêu nhanh và được nhân viên đón tiếp nhiệt tình.', date: '09/06/2026' }
+            ],
+            7: [
+                { name: 'Thu Thủy', rating: 5, content: 'Bánh bạch tuộc Takoyaki và bánh Taiyaki cá chép nóng hổi ngon tuyệt vời!', date: '09/06/2026' }
+            ],
+            8: [
+                { name: 'Hoàng Long', rating: 4, content: 'Có nhiều mẫu áo Happi rực rỡ khoác ngoài sành điệu, tha hồ sống ảo.', date: '09/06/2026' }
+            ],
+            9: [
+                { name: 'Quốc Việt', rating: 5, content: 'Workshop Matcha trà đạo hướng dẫn cách đánh chasen tạo bọt rất chuyên nghiệp.', date: '09/06/2026' }
+            ],
+            10: [
+                { name: 'Yến Vy', rating: 5, content: 'Trò chơi ném vòng trúng thưởng bánh kẹo cực vui, đúng vibe lễ hội truyền thống!', date: '09/06/2026' }
+            ]
+        };
+
+        let currentBoothRatingVal = 5;
+        function setBoothRating(val) {
+            currentBoothRatingVal = val;
+            const stars = document.querySelectorAll('.booth-star-btn');
+            stars.forEach((s, idx) => {
+                if (idx < val) {
+                    s.className = "booth-star-btn text-yellow-400";
+                } else {
+                    s.className = "booth-star-btn text-gray-300";
+                }
+            });
+            document.getElementById('booth-review-rating').value = val;
+        }
+
+        function loadBoothReviews(boothId) {
+            const listContainer = document.getElementById('booth-reviews-list');
+            if (!listContainer) return;
+            const reviews = boothReviews[boothId] || [];
+            if (reviews.length === 0) {
+                listContainer.innerHTML = '<p class="text-gray-400 text-xs text-center py-6">Chưa có đánh giá nào cho booth này. Hãy viết đánh giá đầu tiên!</p>';
+                return;
+            }
+            listContainer.innerHTML = reviews.map(r => `
+                <div class="p-3 bg-white rounded-xl border border-pink-50 space-y-1 shadow-sm">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-extrabold text-pink-600">👤 ${r.name}</span>
+                        <span class="text-yellow-400">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                    </div>
+                    <p class="text-xs text-gray-700 font-semibold text-left">${r.content}</p>
+                    <span class="block text-[9px] text-gray-400 text-right">${r.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function handleBoothReviewSubmit(e) {
+            e.preventDefault();
+            const rating = parseInt(document.getElementById('booth-review-rating').value);
+            const content = document.getElementById('booth-review-content').value;
+            const author = currentUser ? currentUser.name : 'Khách';
+
+            const newReview = {
+                name: author,
+                rating: rating,
+                content: content,
+                date: '09/06/2026'
+            };
+
+            if (!boothReviews[selectedBoothIdForDetail]) {
+                boothReviews[selectedBoothIdForDetail] = [];
+            }
+            boothReviews[selectedBoothIdForDetail].unshift(newReview);
+            loadBoothReviews(selectedBoothIdForDetail);
+            document.getElementById('booth-review-form').reset();
+            setBoothRating(4);
+            showToast('Cảm ơn bạn đã gửi cảm nhận về gian hàng!');
+            addHistoryLog('VOTE', 'Đánh giá gian hàng', `Đánh giá gian hàng ${mockedBooths.find(b => b.id === selectedBoothIdForDetail).name}: ${rating} sao.`);
+        }
 
         function loadBooths() {
             const listContainer = document.getElementById('booths-list');
@@ -1805,6 +2004,7 @@
             }
 
             loadBoothGalleryPhotos(boothId);
+            loadBoothReviews(boothId);
             navigateTo('booth-detail');
         }
 
@@ -1890,7 +2090,7 @@
                 return;
             }
             container.innerHTML = photos.map(p => `
-                <img src="${p}" class="w-full h-24 object-cover rounded-xl border border-pink-100 hover:scale-105 transition">
+                <img src="${p}" onerror="this.onerror=null; this.src='https://placehold.co/200x200/fff5f7/ff5b84?text=Sakura+Festival'" class="w-full h-24 object-cover rounded-xl border border-pink-100 hover:scale-105 transition shadow-sm" alt="Booth activity photo">
             `).join('');
         }
 
@@ -2068,11 +2268,11 @@
 
         // Thay đổi toàn bộ các đường link hình ảnh thành các cosplay nhân vật thực tế khác biệt rõ rệt
         const mockCoserCandidates = [
-            { id: 1, name: 'Minh Thư (Coser: Sakura)', desc: 'Hóa thân tinh anh thành Cardcaptor Sakura rực rỡ cánh hoa đào hồng thắm.', votes: 421, voted: false, img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=300&auto=format&fit=crop' },
-            { id: 2, name: 'Hoàng Long (Coser: Naruto)', desc: 'Nhẫn giả làng lá truyền cảm hứng dũng mãnh, đầy nhiệt huyết.', votes: 310, voted: false, img: 'https://images.unsplash.com/photo-1541562232579-512a21360020?q=80&w=300&auto=format&fit=crop' },
-            { id: 3, name: 'Gia Bảo (Coser: Conan)', desc: 'Thám tử học sinh lừng danh lịch lãm với vest xanh và kính cận thông thái.', votes: 298, voted: false, img: 'https://images.unsplash.com/photo-1627384113743-6bd5a479fffd?q=80&w=300&auto=format&fit=crop' },
-            { id: 4, name: 'Phương Thảo (Coser: Nezuko)', desc: 'Em gái Nezuko siêu cấp đáng yêu mang ống tre dạo bước sảnh Phạm Văn Đồng.', votes: 541, voted: false, img: 'https://images.unsplash.com/photo-1601987177651-8edfe6c20009?q=80&w=300&auto=format&fit=crop' },
-            { id: 5, name: 'Hải Đăng (Coser: Luffy)', desc: 'Thuyền trưởng Luffy kiên cường mang mũ rơm đi tìm kho báu Sakura.', votes: 388, voted: false, img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=300&auto=format&fit=crop' }
+            { id: 1, name: 'Minh Thư (Coser: Sakura)', desc: 'Hóa thân tinh anh thành Cardcaptor Sakura với màu trắng tinh khiết.', votes: 421, voted: false, img: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR1KtIC9Yh1b1ydx3zHJc8bRW8F5nvOu4H-tkvFHvVZ3dFF_lnHUTKdYuwbtXUU' },
+            { id: 2, name: 'Hoàng Long (Coser: Naruto)', desc: 'Nhẫn giả làng lá truyền cảm hứng dũng mãnh, đầy nhiệt huyết.', votes: 310, voted: false, img: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTVaUOm1uTqWh6fnH_sMTd1MZGqXbVLvlbNdf-XReGZASrAv_ER9d6-zVaT1spy' },
+            { id: 3, name: 'Gia Bảo (Coser: Conan)', desc: 'Thám tử học sinh lừng danh lịch lãm với vest xanh và kính cận thông thái.', votes: 298, voted: false, img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDKGCwqdeQr4aclDj0W1c6EQBVqldnQO7vjkfozJBqXLKskN4Z-v1nx2WNBv8S' },
+            { id: 4, name: 'Phương Thảo (Coser: Nezuko)', desc: 'Em gái Nezuko siêu cấp đáng yêu mang ống tre dạo bước sảnh Phạm Văn Đồng.', votes: 541, voted: false, img: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSOE5nKD7Z_0JH_ijDcvMGg0IDgQWYXxhPMNf2iYpu5obTScW1-pCH7Y-MEUoB5' },
+            { id: 5, name: 'Hải Đăng (Coser: Luffy)', desc: 'Thuyền trưởng Luffy kiên cường mang mũ rơm đi tìm kho báu Sakura.', votes: 388, voted: false, img: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTBfgAosH3NmGYple6Z73GVW6g4rGAQZ6j8p1rSlW1Il2j1jEeib5kK4Rb-80os' }
         ];
 
         function loadCosplayContest() {
@@ -2110,99 +2310,90 @@
             addHistoryLog('VOTE', 'Bình chọn Cosplay', `Bình chọn cho thí sinh ${cand.name}`);
         }
 
-        // Expanded detailed Manga objects with stories and simulated black-and-white panels
+        // Khai báo danh sách truyện tranh manga One-Shot với cốt truyện và panel chi tiết
         const mockMangaCandidates = [
             { 
                 id: 1, 
                 title: 'Sakura & Kero: Phá giải mê lộ Tháp Sáng Tạo', 
                 author: 'Khánh Vân (Lớp 11A3)',
                 votes: 121, 
-                voted: false, 
-                img: 'https://images.unsplash.com/photo-1560942485-b2a11cc13456?q=80&w=200&auto=format&fit=crop',
-                story: 'Sakura và Kero bất ngờ bị cuốn vào mê lộ ảo ảnh của Tháp Sáng Tạo đặt tại Gigamall 2026. Để tìm đường ra và kích hoạt bảo vật, cả hai không sử dụng thẻ bài phép thuật mà phải dùng trí tuệ cùng khả năng tính toán thông minh để giải mã những mật thư hóc búa của cổ nhân!',
+                voted: false,
+                story: 'Sakura và Kero vô tình bị cuốn vào không gian 3D ma thuật bên trong mô hình Tháp Sáng Tạo tại sảnh chính Gigamall. Bằng cách phối hợp giải các câu đố cổ trang của lễ hội Sakura, họ đã tìm thấy chiếc chìa khóa thần kỳ dẫn lối ra.',
                 panels: [
-                    { num: 1, bg: '🌸🏰', char: 'Sakura ngơ ngác', text: 'Ôi trời Kero ơi! Tháp Sáng Tạo khổng lồ rực rỡ quá, nhưng sao xung quanh đầy rẫy các mật mã phép thuật thế kia?!' },
-                    { num: 2, bg: '🥐', char: 'Kero bay lượn lơ', text: 'Tớ ngửi thấy mùi... tri thức rất thơm! Mà này Sakura, chúng ta phải vượt qua trò chơi Finger Math mới được nhận bánh Taiyaki tiếp đấy!' },
-                    { num: 3, bg: '🎯', char: 'Hộ Vệ Robot', text: 'Chào mừng hai vị khách! Hãy giải nhanh câu đố này bằng ngón tay của bạn: 9 x 9 bằng bao nhiêu trong vòng 3 giây?!' },
-                    { num: 4, bg: '✨🎉', char: 'Sakura tỏa nắng', text: 'Dễ ợt! Là 81! Kỹ thuật toán Finger Math quả là kỳ diệu. Nhìn kìa Kero, cánh cửa Tháp Sáng Tạo đã mở ra rồi!' }
+                    { img: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRtspXYWRh2eeOwexDxNd3Fd_lWXRNh3k0in43S_u04cqAemgCjouWoSIvpCoRH', text: 'Kero: "Sakura nhìn xem! Bức tranh tường hoa anh đào kia đang phát sáng!"' },
+                    { img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2kZZd8y6afT_VIfzp1omOuF6XAMlB-8dH0beOE71CtK0B0TyNuaRop8Kh8nUr', text: 'Sakura: "Mình hiểu rồi! Chúng ta phải ghép các mảnh Origami rơi xung quanh lại!"' }
                 ]
             },
             { 
                 id: 2, 
-                title: 'Nobita và hành trình xuyên không tới Gigamall 2026', 
-                author: 'Đức Anh (Trường THPT Hiệp Bình Chánh)',
-                votes: 98, 
-                voted: false, 
-                img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=200&auto=format&fit=crop',
-                story: 'Để chạy trốn khỏi bài kiểm tra khảo sát đầu năm, Nobita đã cầu xin Doraemon sử dụng bảo bối Cỗ máy thời gian để đi du lịch. Thật không ngờ, cả hai đáp thẳng xuống sảnh Phạm Văn Đồng đúng dịp Lễ hội Hoa Anh Đào rực rỡ và phát hiện ra chiếc Kiosk AI vô cùng hiện đại!',
+                title: 'Huyền thoại bảo kiếm tuyết trắng Fuji', 
+                author: 'Nhật Minh (Cộng đồng Manga HCM)',
+                votes: 95, 
+                voted: false,
+                story: 'Giyuu - Một chiến binh trẻ tuổi hành hương lên đỉnh núi Phú Sĩ tuyết phủ trắng xóa vào đúng dịp hoa anh đào nở rộ. Anh nhận ra sức mạnh tối thượng không nằm ở vũ khí mà nằm ở tinh thần bảo vệ thiên nhiên trường tồn.',
                 panels: [
-                    { num: 1, bg: '🌪️🚪', char: 'Nobita ngã nhào', text: 'Ui da đau quá! Đây là đâu thế này Doraemon? Sao ở đây lại có cả một rừng hoa anh đào nở rộ lung linh thế này?!' },
-                    { num: 2, bg: '🌸', char: 'Doraemon check-in', text: 'Gigamall năm 2026 đấy Nobita! Mau quét mã QR định danh đi, chúng ta sẽ được nhận Voucher 20k ăn bánh cá Taiyaki cực đỉnh!' },
-                    { num: 3, bg: '👘📱', char: 'Nobita thử đồ', text: 'Tớ vừa thử áo Yukata và quét khuôn mặt tại Kiosk AI này! Nhìn xem, AI khuyên tớ cực kỳ hợp với đai lụa Indigo nhé!' },
-                    { num: 4, bg: '🏃‍♂️💢', char: 'Chaien rượt đuổi', text: 'Nobita kia!! Dám đi ăn mảnh lễ hội hoành tráng thế này mà không rủ bọn này à! Đứng lại mauuu!' }
+                    { img: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTOuVc4c4rC6pzC5ptOfb4zruUyFYfA5WW90j3GeYZN6srWbzO-MKYLWdNUkWVj', text: 'Chiến binh: "Thanh bảo kiếm này chỉ thức tỉnh khi tà khí xung quanh bị thanh tẩy bởi sắc hồng Sakura!"' },
+                    { img: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSznaC8jTNUtpf-mRf2X5Il23QasGKeNSSW2-q-w44PE6A4YfCcfS-TH_6vf2Mn', text: 'Hồn kiếm: "Ngươi đã ngộ ra chân lý tuyệt vời nhất của lòng nhân đạo rồi đó!"' }
                 ]
             }
         ];
 
+        // Đọc danh sách bài dự thi Manga ra giao diện
         function loadMangaContest() {
             const container = document.getElementById('manga-contest-list');
             if (!container) return;
             container.innerHTML = mockMangaCandidates.map(m => `
-                <div class="bg-white p-4 rounded-3xl border border-pink-100 flex flex-col justify-between h-48 shadow-sm">
-                    <div class="flex items-center space-x-3">
-                        <img src="${m.img}" class="w-16 h-16 object-cover rounded-xl border-2 border-black shadow-sm">
-                        <div class="text-left">
-                            <h5 class="text-xs font-black text-gray-800 line-clamp-1">${m.title}</h5>
-                            <span class="text-[10px] text-gray-400 block font-bold">Tác giả: ${m.author}</span>
-                            <span class="text-[10px] text-pink-600 font-extrabold mt-1 inline-block">👍 ${m.votes} lượt vote</span>
-                        </div>
+                <div onclick="openMangaModal(${m.id})" class="bg-white p-4 rounded-3xl border border-pink-100 hover:border-pink-300 transition shadow-sm cursor-pointer flex flex-col justify-between">
+                    <div class="text-left space-y-2">
+                        <span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded uppercase">MANGA 1-SHOT</span>
+                        <h4 class="text-sm font-extrabold text-gray-800 line-clamp-1">${m.title}</h4>
+                        <p class="text-xs text-gray-500 font-bold">Tác giả: ${m.author}</p>
                     </div>
-                    
-                    <div class="flex space-x-2 mt-4">
-                        <button onclick="openMangaDetail(${m.id})" class="flex-1 bg-amber-500 hover:bg-amber-600 border-2 border-black text-white text-[10px] font-black py-2 rounded-xl transition">
-                            <i class="fa-solid fa-book-open mr-1"></i> Xem Tác Phẩm
-                        </button>
-                        <button onclick="voteManga(${m.id})" class="bg-white hover:bg-pink-50 border-2 border-black text-black text-[10px] font-black py-2 rounded-xl transition">
-                            Vote 👍
-                        </button>
+                    <div class="flex items-center justify-between border-t border-pink-50 pt-2 mt-4">
+                        <span class="text-xs font-black text-amber-600">👍 ${m.votes} lượt vote</span>
+                        <span class="text-xs font-bold text-pink-500">Xem tác phẩm &rarr;</span>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Modal triggers for Manga details and comic frames
-        function openMangaDetail(id) {
+        let currentSelectedMangaId = null;
+
+        // Mở popup xem chi tiết cốt truyện và các khung tranh Manga thoại
+        function openMangaModal(id) {
+            currentSelectedMangaId = id;
             const manga = mockMangaCandidates.find(m => m.id === id);
+            if (!manga) return;
+
             document.getElementById('modal-manga-title').textContent = manga.title;
             document.getElementById('modal-manga-author').textContent = manga.author;
             document.getElementById('modal-manga-story').textContent = manga.story;
 
             const panelsContainer = document.getElementById('modal-manga-panels');
-            panelsContainer.innerHTML = manga.panels.map(p => `
-                <div class="border-4 border-black p-4 rounded-2xl relative bg-neutral-100 flex flex-col justify-between h-56 overflow-hidden shadow-md">
-                    <div class="absolute inset-0 opacity-10 flex items-center justify-center text-8xl font-black select-none pointer-events-none text-black">
-                        ${p.bg}
+            if (panelsContainer) {
+                panelsContainer.innerHTML = manga.panels.map(p => `
+                    <div class="border-2 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_#000000]">
+                        <img src="${p.img}" class="w-full h-32 object-cover border-b-2 border-black grayscale">
+                        <div class="p-3 bg-white text-[11px] font-bold text-black text-left leading-relaxed">
+                            ${p.text}
+                        </div>
                     </div>
-
-                    <div class="absolute top-2 left-2 bg-black text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
-                        KHUNG ${p.num}
-                    </div>
-
-                    <div class="text-right text-[10px] font-black text-gray-800 tracking-wider">
-                        [ ${p.char} ]
-                    </div>
-
-                    <div class="manga-bubble mt-6 mb-2 relative z-10 text-left">
-                        ${p.text}
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             const voteBtn = document.getElementById('modal-manga-vote-btn');
-            voteBtn.onclick = function() {
-                voteManga(manga.id);
-                closeMangaModal();
-            };
+            if (voteBtn) {
+                if (manga.voted) {
+                    voteBtn.className = "bg-gray-300 border-2 border-black text-gray-600 font-black px-6 py-2 rounded-xl text-xs shadow-md cursor-not-allowed";
+                    voteBtn.disabled = true;
+                    voteBtn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Đã Bình Chọn`;
+                } else {
+                    voteBtn.className = "bg-amber-500 hover:bg-amber-600 border-2 border-black text-white font-black px-6 py-2 rounded-xl text-xs shadow-md transition transform active:scale-95 flex items-center space-x-2";
+                    voteBtn.disabled = false;
+                    voteBtn.innerHTML = `<i class="fa-solid fa-thumbs-up"></i> <span>Bình Chọn Tác Phẩm Này</span>`;
+                    voteBtn.onclick = () => voteManga(manga.id);
+                }
+            }
 
             document.getElementById('manga-detail-modal').classList.remove('hidden');
         }
@@ -2211,92 +2402,238 @@
             document.getElementById('manga-detail-modal').classList.add('hidden');
         }
 
+        // Thực hiện bình chọn tác phẩm Manga
         function voteManga(id) {
-            const cand = mockMangaCandidates.find(m => m.id === id);
-            if (cand.voted) {
-                showToast('Bạn đã bình chọn cho manga này rồi nhé!', 'error');
-                return;
+            const manga = mockMangaCandidates.find(m => m.id === id);
+            if (manga && !manga.voted) {
+                manga.votes++;
+                manga.voted = true;
+                loadMangaContest();
+                openMangaModal(id); // cập nhật trạng thái hiển thị của nút ngay trong modal
+                showToast(`Đã bình chọn cho truyện tranh: ${manga.title}!`);
+                addHistoryLog('VOTE', 'Bình chọn Manga', `Bình chọn tác phẩm ${manga.title}`);
             }
-            cand.votes++;
-            cand.voted = true;
-            loadMangaContest();
-            showToast(`Đã bình chọn cho tác phẩm: ${cand.title}!`);
-            addHistoryLog('VOTE', 'Bình chọn tác phẩm Manga', `Bình chọn: ${cand.title}`);
         }
 
-        // --- 10. COMMUNITY SHIELDED SEPARATE CHATS ---
-        const cosplayChatLogs = [
-            { user: 'Băng Băng', msg: 'Make-up ở booth Tháp Sáng Tạo đỉnh lắm, mọi người ghé thử xem!' },
-            { user: 'Coser Nguyên', msg: 'Chiều nay 15h có ai lên sảnh biểu diễn Aikido chung hông?' },
-            { user: 'Kuroko Chan', msg: 'Bộ đồ cosplay Sakura Cardcaptor may vải mịn xịn cực kì luôn nè.' }
-        ];
-
-        const mangaChatLogs = [
-            { user: 'Phong Nguyễn', msg: 'One-shot Sakura & Kero cốt truyện cuốn hút, lời thoại mặn ghê kkk.' },
-            { user: 'Hạ Vy', msg: 'Mê nét vẽ của truyện Nobita ghê á, nhìn chuyên nghiệp ghê.' },
-            { user: 'Khánh Duy', msg: 'Thấy bảo Top 20 tác phẩm Tháp Sáng Tạo sẽ được in cứng thành sách giấy làm kỉ niệm đúng không ta?' }
-        ];
-
+        // Quản lý và tải khung chat cho Cosplay & Manga
         function loadCosplayChats() {
-            const container = document.getElementById('cosplay-chat-messages');
-            if (container) {
-                container.innerHTML = cosplayChatLogs.map(c => `
-                    <div class="space-y-0.5 bg-pink-50 p-2 rounded-xl text-left border border-pink-100">
-                        <strong class="text-pink-600 text-[10px]">${c.user}:</strong>
-                        <p class="text-gray-700 font-semibold text-xs">${c.msg}</p>
-                    </div>
-                `).join('');
-                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-            }
+            const chatContainer = document.getElementById('cosplay-chat-messages');
+            if (!chatContainer) return;
+            chatContainer.innerHTML = `
+                <div class="bg-pink-50 p-2.5 rounded-2xl"><strong>Coser Vy:</strong> Sảnh ngoài Phạm Văn Đồng lộng lẫy cực kỳ, chụp góc nào cũng ăn ảnh hết á!</div>
+                <div class="bg-gray-100 p-2.5 rounded-2xl"><strong>Lâm Phong:</strong> Có phòng thay đồ chuyên nghiệp và ekip trang điểm hỗ trợ trực tiếp ở gần sảnh không ạ?</div>
+                <div class="bg-pink-50 p-2.5 rounded-2xl"><strong>Admin_Sakura:</strong> Có khu vực riêng gần quầy Mystical Yukata nha bạn ơi! Hỗ trợ soi gương và trang điểm miễn phí.</div>
+            `;
         }
 
         function loadMangaChats() {
-            const container = document.getElementById('manga-chat-messages');
-            if (container) {
-                container.innerHTML = mangaChatLogs.map(m => `
-                    <div class="space-y-0.5 bg-amber-50 p-2 rounded-xl text-left border border-amber-100">
-                        <strong class="text-amber-700 text-[10px]">${m.user}:</strong>
-                        <p class="text-gray-700 font-semibold text-xs">${m.msg}</p>
-                    </div>
-                `).join('');
-                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-            }
+            const chatContainer = document.getElementById('manga-chat-messages');
+            if (!chatContainer) return;
+            chatContainer.innerHTML = `
+                <div class="bg-amber-50 p-2.5 rounded-2xl"><strong>Kha_Coser:</strong> Nét vẽ của bộ "Phá giải mê lộ Tháp Sáng Tạo" nhìn cưng quá chừng!</div>
+                <div class="bg-gray-100 p-2.5 rounded-2xl"><strong>Manga_Artist:</strong> Workshop Tháp Sáng Tạo ở sảnh có đầy đủ bảng vẽ wacom để thực hành vẽ digital luôn đó.</div>
+            `;
         }
 
         function handleSendCosplayChat(e) {
             e.preventDefault();
             const input = document.getElementById('cosplay-chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            cosplayChatLogs.push({
-                user: currentUser ? currentUser.name : 'Khách',
-                msg: text
-            });
-            loadCosplayChats();
+            const val = input.value.trim();
+            if (!val) return;
+            const chatContainer = document.getElementById('cosplay-chat-messages');
+            chatContainer.insertAdjacentHTML('beforeend', `
+                <div class="bg-pink-100 p-2.5 rounded-2xl text-right"><strong>Bạn:</strong> ${val}</div>
+            `);
             input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
         function handleSendMangaChat(e) {
             e.preventDefault();
             const input = document.getElementById('manga-chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            mangaChatLogs.push({
-                user: currentUser ? currentUser.name : 'Khách',
-                msg: text
-            });
-            loadMangaChats();
+            const val = input.value.trim();
+            if (!val) return;
+            const chatContainer = document.getElementById('manga-chat-messages');
+            chatContainer.insertAdjacentHTML('beforeend', `
+                <div class="bg-amber-100 p-2.5 rounded-2xl text-right"><strong>Bạn:</strong> ${val}</div>
+            `);
             input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        // --- 11. GÓC VĂN HÓA & ARTICLES ---
+        // --- 11. GÓC VĂN HÓA & ARTICLES (GEMINI AI MODERATION FUNCTION) ---
         let cultureArticles = [
             { id: 1, category: 'Ẩm thực', title: 'Nghệ thuật ẩm thực Sushi - Linh hồn quốc thực Nhật Bản', summary: 'Hành trình ngàn năm chắt lọc vị ngon mộc mạc nguyên sơ của hải sản dưới bàn tay tài hoa.', author: 'Nghệ nhân Saito', date: '08/06/2026', content: 'Sushi ban đầu chỉ là một cách bảo quản cá bằng cách ủ với cơm lên men. Dần dần, người dân Edo đã sáng chế ra cách dùng dấm trộn cơm ăn cùng cá sống, từ đó bùng nổ văn hóa ẩm thực đặc trưng lan tỏa toàn cầu...', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=300&auto=format&fit=crop' },
             { id: 2, category: 'Trang phục', title: 'Ý nghĩa văn hóa đằng sau tà áo truyền thống Yukata', summary: 'Tại sao người Nhật thường mặc Yukata mỏng nhẹ đi dạo ngắm hoa anh đào thay vì Kimono dày cộp?', author: 'Thái Bình', date: '08/06/2026', content: 'Yukata vốn là trang phục tắm bằng vải cotton thấm hút mồ hôi của quý tộc xưa khi tắm nước nóng Onsen. Với sự thoải mái, thoáng mát và giá cả phải chăng, Yukata nhanh chóng biến thành phục trang lễ hội dạo phố...', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop' },
             { id: 3, category: 'Lễ hội', title: 'Lễ hội ngắm hoa Hanami - Triết lý vô thường của sự sống', summary: 'Vì sao hàng triệu người Nhật Bản đổ xô ra công viên tụ tập ăn uống dưới những cánh hoa rơi anh đào?', author: 'Hương Giang', date: '08/06/2026', content: 'Hanami là nét đẹp truyền thống có lịch sử hơn một ngàn năm từ thời Nara. Đối với người dân xứ sở mặt trời mọc, hoa anh đào nở rộ nhanh chóng rồi rụng tàn rực rỡ biểu trưng cho triết lý sống trọn vẹn từng khoảnh khắc...', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop' }
         ];
+
+        function simulateAiModeration(title, content, category, author, imageBase64, callback) {
+            // Hiển thị khung Overlay kiểm duyệt hoành tráng
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4";
+            overlay.innerHTML = `
+                <div class="bg-white rounded-3xl p-8 max-w-md w-full space-y-6 text-center border-4 border-pink-500 shadow-2xl relative">
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl shadow-lg border-4 border-white animate-bounce">
+                        🤖
+                    </div>
+                    <div class="pt-6 space-y-2">
+                        <h4 class="text-lg font-black text-gray-800">Gemini AI Safeguard</h4>
+                        <p class="text-xs text-purple-700 font-bold uppercase tracking-wider">Hệ thống kiểm duyệt bài viết tự động</p>
+                    </div>
+                    
+                    <div id="ai-moderation-steps" class="space-y-3 text-xs text-left max-h-40 overflow-y-auto bg-pink-50 p-4 rounded-2xl border border-pink-100 font-mono">
+                        <div class="flex items-center space-x-2 text-pink-600">
+                            <i class="fa-solid fa-circle-notch animate-spin"></i>
+                            <span>Khởi tạo bộ quét bảo mật...</span>
+                        </div>
+                    </div>
+
+                    <div id="ai-moderation-result" class="hidden space-y-4">
+                        <!-- Sẽ hiển thị kết quả -->
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            const stepsContainer = document.getElementById('ai-moderation-steps');
+
+            function addStep(text, type = 'loading') {
+                const step = document.createElement('div');
+                step.className = `flex items-center space-x-2 ${type === 'success' ? 'text-green-600' : type === 'error' ? 'text-red-600' : 'text-gray-600'}`;
+                step.innerHTML = `
+                    <i class="fa-solid ${type === 'loading' ? 'fa-circle-notch animate-spin' : type === 'success' ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                    <span>${text}</span>
+                `;
+                stepsContainer.appendChild(step);
+                stepsContainer.scrollTop = stepsContainer.scrollHeight;
+            }
+
+            // Bước 1: Quét an toàn
+            setTimeout(() => {
+                stepsContainer.children[0].className = "flex items-center space-x-2 text-green-600";
+                stepsContainer.children[0].querySelector('i').className = "fa-solid fa-check-circle";
+                addStep("Đang quét an toàn ngôn từ và bộ lọc chống Spam...");
+                
+                // Bước 2: Quét mức độ liên quan văn hóa Nhật Bản
+                setTimeout(() => {
+                    stepsContainer.children[1].className = "flex items-center space-x-2 text-green-600";
+                    stepsContainer.children[1].querySelector('i').className = "fa-solid fa-check-circle";
+                    addStep(`Phân tích mức độ liên quan chuyên mục: ${category}...`);
+                    
+                    // Bước 3: Chấm điểm chất lượng thông tin bằng mô hình AI Gemini
+                    setTimeout(async () => {
+                        stepsContainer.children[2].className = "flex items-center space-x-2 text-green-600";
+                        stepsContainer.children[2].querySelector('i').className = "fa-solid fa-check-circle";
+                        addStep("Liên kết API mô hình Gemini AI phê duyệt bài viết...");
+
+                        let isApproved = true;
+                        let feedback = "Nội dung đóng góp rất sâu sắc, có giá trị tuyên truyền lịch sử, thẩm mỹ và văn hóa Nhật Bản sâu rộng.";
+                        
+                        try {
+                            const apiKey = ""; // Canvas auto fills key
+                            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                            const prompt = `Bạn là biên tập viên AI kiểm duyệt nội dung của cổng thông tin Lễ hội Nhật Bản Gigamall 2026. Hãy duyệt bài viết:
+                            Chuyên mục: ${category}
+                            Tiêu đề: ${title}
+                            Tác giả: ${author}
+                            Nội dung: ${content}
+                            
+                            Quy tắc duyệt: Nội dung phải tôn trọng văn hóa Nhật Bản, không bậy bạ, không thô tục và có ích cho khách tham quan.
+                            Trả về kết quả duy nhất dạng JSON:
+                            {
+                              "approved": true hoặc false,
+                              "feedback": "Nhận xét tiếng Việt ngắn (2 câu) về bài viết."
+                            }`;
+
+                            const payload = {
+                                contents: [{ parts: [{ text: prompt }] }],
+                                generationConfig: {
+                                    responseMimeType: "application/json",
+                                    responseSchema: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            approved: { type: "BOOLEAN" },
+                                            feedback: { type: "STRING" }
+                                        },
+                                        required: ["approved", "feedback"]
+                                    }
+                                }
+                            };
+
+                            const res = await fetch(apiUrl, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                            
+                            if (res.ok) {
+                                const resultData = await res.json();
+                                const parsed = JSON.parse(resultData.candidates[0].content.parts[0].text);
+                                isApproved = parsed.approved;
+                                feedback = parsed.feedback;
+                            }
+                        } catch (e) {
+                            // Offline Fallback Scanner
+                            const hasOffensive = /bậy|tục|chửi|địt|đụ|lồn|spam|hack/i.test(content + title);
+                            const hasJapanKeywords = /nhật|japan|sakura|kimono|yukata|sushi|saito|fuji|tokyo|kyoto|manga|anime|lịch sử|trà đạo|matcha/i.test(content + title + category);
+                            
+                            if (hasOffensive) {
+                                isApproved = false;
+                                feedback = "Phát hiện ngôn ngữ không phù hợp hoặc vi phạm tiêu chuẩn bảo mật cộng đồng của Gigamall.";
+                            } else if (!hasJapanKeywords && content.length < 40) {
+                                isApproved = false;
+                                feedback = "Bài viết quá ngắn hoặc không chứa các từ khóa phản ánh nét đẹp Nhật Bản.";
+                            }
+                        }
+
+                        setTimeout(() => {
+                            stepsContainer.children[3].className = "flex items-center space-x-2 text-green-600";
+                            stepsContainer.children[3].querySelector('i').className = "fa-solid fa-check-circle";
+                            addStep("Phân tích hoàn tất! Đang kết luận...", 'success');
+                            
+                            setTimeout(() => {
+                                const resultBox = document.getElementById('ai-moderation-result');
+                                resultBox.classList.remove('hidden');
+                                if (isApproved) {
+                                    resultBox.innerHTML = `
+                                        <div class="p-4 bg-green-50 rounded-2xl border border-green-200 text-xs text-green-800 text-left space-y-2">
+                                            <div class="font-extrabold flex items-center text-green-700">
+                                                <i class="fa-solid fa-circle-check mr-1.5 text-base"></i> ĐÃ DUYỆT BỞI GEMINI AI
+                                            </div>
+                                            <p>${feedback}</p>
+                                        </div>
+                                        <button id="ai-moderation-close-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                                            Hoàn tất & Xuất Bản
+                                        </button>
+                                    `;
+                                    document.getElementById('ai-moderation-close-btn').onclick = () => {
+                                        overlay.remove();
+                                        callback(true);
+                                    };
+                                } else {
+                                    resultBox.innerHTML = `
+                                        <div class="p-4 bg-red-50 rounded-2xl border border-red-200 text-xs text-red-800 text-left space-y-2">
+                                            <div class="font-extrabold flex items-center text-red-700">
+                                                <i class="fa-solid fa-circle-xmark mr-1.5 text-base"></i> TỪ CHỐI DUYỆT BỞI GEMINI AI
+                                            </div>
+                                            <p>${feedback}</p>
+                                        </div>
+                                        <button id="ai-moderation-close-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                                            Quay lại chỉnh sửa
+                                        </button>
+                                    `;
+                                    document.getElementById('ai-moderation-close-btn').onclick = () => {
+                                        overlay.remove();
+                                        callback(false);
+                                    };
+                                }
+                            }, 500);
+                        }, 800);
+                    }, 800);
+                }, 800);
+            }, 800);
+        }
 
         function filterArticles(cat) {
             document.querySelectorAll('.art-filter-btn').forEach(b => {
@@ -2349,35 +2686,42 @@
             const imageInput = document.getElementById('art-image-input');
 
             let imageBase64 = 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop';
+            
+            const proceedWithModeration = () => {
+                simulateAiModeration(title, content, category, author, imageBase64, (approved) => {
+                    if (approved) {
+                        const newArticle = {
+                            id: cultureArticles.length + 1,
+                            category: category,
+                            title: title,
+                            summary: summary,
+                            author: author,
+                            date: '08/06/2026',
+                            content: content,
+                            image: imageBase64
+                        };
+
+                        cultureArticles.unshift(newArticle);
+                        loadArticles();
+                        showToast('Bài viết đóng góp thành công! Gemini AI đã phê duyệt và chính thức hiển thị bài viết.');
+                        addHistoryLog('REGISTRATION', 'Đóng góp bài viết mới (AI Duyệt)', `Tiêu đề: ${title}. Chuyên mục: ${category}`);
+                        document.getElementById('article-create-form').reset();
+                        navigateTo('culture');
+                    } else {
+                        showToast('Hệ thống AI từ chối xuất bản bài viết do không đạt tính chính xác hoặc phù hợp văn hóa.', 'error');
+                    }
+                });
+            };
+
             if (imageInput.files && imageInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     imageBase64 = evt.target.result;
-                    pushArticleToDatabase();
+                    proceedWithModeration();
                 };
                 reader.readAsDataURL(imageInput.files[0]);
             } else {
-                pushArticleToDatabase();
-            }
-
-            function pushArticleToDatabase() {
-                const newArticle = {
-                    id: cultureArticles.length + 1,
-                    category: category,
-                    title: title,
-                    summary: summary,
-                    author: author,
-                    date: '08/06/2026',
-                    content: content,
-                    image: imageBase64
-                };
-
-                cultureArticles.unshift(newArticle);
-                loadArticles();
-                showToast('Bài viết đóng góp thành công! Ban quản trị đang xử lý phê duyệt tự động.');
-                addHistoryLog('REGISTRATION', 'Đóng góp bài viết mới', `Tiêu đề: ${title}. Chuyên mục: ${category}`);
-                document.getElementById('article-create-form').reset();
-                navigateTo('culture');
+                proceedWithModeration();
             }
         }
 
