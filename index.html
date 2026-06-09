@@ -440,7 +440,7 @@
                 <div>
                     <span class="bg-pink-100 text-pink-700 text-xs font-black px-3 py-1 rounded-full uppercase">🗺️ BẢN ĐỒ TƯƠNG TÁC SỰ KIỆN</span>
                     <h2 class="text-2xl font-extrabold text-gray-800 mt-2">Bản Đồ Cung Đường Sakura</h2>
-                    <p class="text-sm text-gray-500 mt-1">Ghé thăm các gian hàng và check-in bằng cách gửi ảnh hoàn thành nhiệm vụ để đổi quà!</p>
+                    <p class="text-sm text-gray-500 mt-1">Ghé thăm các gian hàng và check-in bằng cách quét mã / gửi ảnh hoàn thành nhiệm vụ để đổi quà!</p>
                 </div>
                 <div class="w-full md:w-80 bg-pink-50 p-4 rounded-2xl border border-pink-100">
                     <div class="flex justify-between items-center text-xs font-bold text-pink-800 mb-1">
@@ -1239,7 +1239,7 @@
                     
                     <div class="mb-4">
                         <h4 id="pass-fullname" class="font-black text-base tracking-wide">Tên khách hàng</h4>
-                        <span class="text-[10px] text-pink-100 block mt-1 tracking-wider uppercase font-extrabold">🌸 LỄ HỘI HOA ANH ĐÀO 2026</span>
+                        <span class="text-[10px] text-pink-100 block mt-1 tracking-wider uppercase font-extrabold">🌸 LỮ KHÁCH THƯỞNG LÃM SAKURA 2026</span>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 text-xs">
@@ -1589,17 +1589,24 @@
         // PROFILE MODAL CONTROLS
         function openProfileModal() {
             if (!currentUser) return;
-            document.getElementById('pass-fullname').textContent = currentUser.name;
-            document.getElementById('pass-code').textContent = currentUser.code || 'GIGA-2026-N/A';
-            document.getElementById('pass-username').textContent = currentUser.username || 'N/A';
-            document.getElementById('pass-email').textContent = currentUser.email || 'N/A';
-            document.getElementById('pass-phone').textContent = currentUser.phone || 'N/A';
             
-            document.getElementById('profile-modal').classList.remove('hidden');
+            const nameEl = document.getElementById('pass-fullname');
+            const codeEl = document.getElementById('pass-code');
+            const emailEl = document.getElementById('pass-email');
+            const phoneEl = document.getElementById('pass-phone');
+            
+            if (nameEl) nameEl.textContent = currentUser.name;
+            if (codeEl) codeEl.textContent = currentUser.code || 'GIGA-2026-N/A';
+            if (emailEl) emailEl.textContent = currentUser.email || 'N/A';
+            if (phoneEl) phoneEl.textContent = currentUser.phone || 'N/A';
+            
+            const modalEl = document.getElementById('profile-modal');
+            if (modalEl) modalEl.classList.remove('hidden');
         }
 
         function closeProfileModal() {
-            document.getElementById('profile-modal').classList.add('hidden');
+            const modalEl = document.getElementById('profile-modal');
+            if (modalEl) modalEl.classList.add('hidden');
         }
 
         // PAYMENT VERIFICATION DIALOG CONTROLS
@@ -2662,7 +2669,7 @@
         let cultureArticles = [
             { id: 1, category: 'Ẩm thực', title: 'Nghệ thuật ẩm thực Sushi - Linh hồn quốc thực Nhật Bản', summary: 'Hành trình ngàn năm chắt lọc vị ngon mộc mạc nguyên sơ của hải sản dưới bàn tay tài hoa.', author: 'Nghệ nhân Saito', date: '08/06/2026', content: 'Sushi ban đầu chỉ là một cách bảo quản cá bằng cách ủ với cơm lên men. Dần dần, người dân Edo đã sáng chế ra cách dùng dấm trộn cơm ăn cùng cá sống, từ đó bùng nổ văn hóa ẩm thực đặc trưng lan tỏa toàn cầu...', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=300&auto=format&fit=crop' },
             { id: 2, category: 'Trang phục', title: 'Ý nghĩa văn hóa đằng sau tà áo truyền thống Yukata', summary: 'Tại sao người Nhật thường mặc Yukata mỏng nhẹ đi dạo ngắm hoa anh đào thay vì Kimono dày cộp?', author: 'Thái Bình', date: '08/06/2026', content: 'Yukata vốn là trang phục tắm bằng vải cotton thấm hút mồ hôi của quý tộc xưa khi tắm nước nóng Onsen. Với sự thoải mái, thoáng mát và giá cả phải chăng, Yukata nhanh chóng biến thành phục trang lễ hội dạo phố...', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop' },
-            { id: 3, category: 'Lễ hội', title: 'Lễ hội ngắm hoa Hanami - Triết lý vô thường của sự sống', summary: 'Vì sao hàng triệu người Nhật Bản đổ xô ra công viên tụ tập ăn uống dưới những cánh hoa rơi anh đào?', author: 'Hương Giang', date: '08/06/2026', content: 'Hanami là nét đẹp truyền thống có lịch sử hơn một ngàn năm từ thời Nara. Đối với người dân xứ sở mặt trời mọc, hoa anh đào nở rộ nhanh chóng rồi rụng tàn rực rỡ biểu trưng cho triết lý sống trọn vẹn từng khoảnh khắc...', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaCwxSDBlKwuVVa-w7pu-P5c149miVtvIDJb8rQ1aQHDG-EC3JAxB1NPt8Z7oS' }
+            { id: 3, category: 'Lễ hội', title: 'Lễ hội ngắm hoa Hanami - Triết lý vô thường của sự sống', summary: 'Vì sao hàng triệu người Nhật Bản đổ xô ra công viên tụ tập ăn uống dưới những cánh hoa rơi anh đào?', author: 'Hương Giang', date: '08/06/2026', content: 'Hanami là nét đẹp truyền thống có lịch sử hơn một ngàn năm từ thời Nara. Đối với người dân xứ sở mặt trời mọc, hoa anh đào nở rộ nhanh chóng rồi rụng tàn rực rỡ biểu trưng cho triết lý sống trọn vẹn từng khoảnh khắc...', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop' }
         ];
 
         function filterArticles(cat) {
@@ -3019,30 +3026,24 @@
         }
 
         // --- 13. CHATBOX AI MOCK ASSISTANT ---
-        // PROFILE MODAL CONTROLS
-        function openProfileModal() {
-            if (!currentUser) return;
-            document.getElementById('pass-fullname').textContent = currentUser.name;
-            document.getElementById('pass-code').textContent = currentUser.code || 'GIGA-2026-N/A';
-            document.getElementById('pass-email').textContent = currentUser.email || 'N/A';
-            document.getElementById('pass-phone').textContent = currentUser.phone || 'N/A';
-            
-            document.getElementById('profile-modal').classList.remove('hidden');
+        function toggleChatbox() {
+            const chatWindow = document.getElementById('ai-chatbox-window');
+            if (chatWindow) {
+                chatWindow.classList.toggle('hidden');
+            }
         }
 
-        function closeProfileModal() {
-            document.getElementById('profile-modal').classList.add('hidden');
-        }
-
-        function handleSendAiChat(e) {
+        async function handleSendAiChat(e) {
             e.preventDefault();
             const input = document.getElementById('ai-chat-input');
             const messageText = input.value.trim();
             if (!messageText) return;
 
             const container = document.getElementById('ai-chat-messages');
+            
+            // Thêm tin nhắn của khách hàng vào giao diện lập tức
             container.insertAdjacentHTML('beforeend', `
-                <div class="bg-gray-100 p-3 rounded-2xl max-w-[80%] text-gray-800 ml-auto text-right">
+                <div class="bg-gray-100 p-3 rounded-2xl max-w-[80%] text-gray-800 ml-auto text-right animate-fadeIn">
                     ${messageText}
                 </div>
             `);
@@ -3050,46 +3051,264 @@
             input.value = '';
             container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
 
-            setTimeout(() => {
-                const ans = getAiResponse(messageText);
+            // Thêm hiệu ứng chờ phản hồi từ AI
+            const loadingId = "ai-loading-" + Date.now();
+            container.insertAdjacentHTML('beforeend', `
+                <div id="${loadingId}" class="bg-pink-50 p-3 rounded-2xl max-w-[80%] text-gray-700 text-left flex items-center space-x-2 animate-pulse">
+                    <i class="fa-solid fa-circle-notch animate-spin text-pink-500"></i>
+                    <span class="font-semibold text-[10px]">AI đang xử lý câu hỏi của bạn...</span>
+                </div>
+            `);
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+
+            const userApiKey = localStorage.getItem('user_gemini_api_key') || "";
+            const canvasApiKey = ""; // Tự động lấy khóa API từ môi trường Canvas nếu có
+            const apiKeyToUse = userApiKey || canvasApiKey;
+
+            let responseText = "";
+
+            try {
+                // Thống kê tiến độ hiện tại để làm dữ liệu nền thông minh
+                let completedBooths = 0;
+                mockedBooths.forEach(b => {
+                    if (userBoothStatus[b.id]) completedBooths++;
+                });
+                const progressPercent = Math.round((completedBooths / mockedBooths.length) * 100);
+
+                // Thiết lập Prompt hệ thống chi tiết để định hướng Gemini trả lời đúng trọng tâm lễ hội
+                const systemInstruction = `Bạn là Trợ lý AI chính thức của Lễ hội Hoa Anh Đào Gigamall 2026 - Cung Đường Vàng Sakura. 
+                Hãy đóng vai một điều phối viên sảnh vô cùng am hiểu, lễ phép, mến khách và sử dụng các emoji dễ thương (🌸, 👘, 🍣, 👹, 🎯).
+                Bạn phải trả lời TRỰC TIẾP và KHỚP với câu hỏi của khách hàng. Tuyệt đối không trả lời lạc đề hoặc bê nguyên danh sách dài nếu họ chỉ hỏi một chi tiết nhỏ!
+                Nếu họ hỏi về "địa chỉ sảnh", chỉ tập trung chỉ đường. Nếu họ hỏi về "nhà ma", hãy chỉ tóm tắt cốt truyện hoặc giá vé nhà ma.
+
+                Thông tin lễ hội để bạn tra cứu:
+                - Địa điểm: Sảnh Phạm Văn Đồng, TTTM Gigamall (240-242 Phạm Văn Đồng, Hiệp Bình Chánh, Thủ Đức, TP.HCM).
+                - Thời gian: 21/03 đến 03/05/2026. Vào cửa miễn phí!
+                - Giờ hoạt động TTTM: T2-T6 (9:30-22:00), T7-CN (9:00-22:00).
+                - Khách hàng đang chat: Tên là "${currentUser ? currentUser.name : 'Khách'}", mã định danh cá nhân: "${currentUser ? currentUser.code : 'Chưa đăng ký'}".
+                - Tiến độ Check-in hiện tại của họ: Đã check-in thành công ${completedBooths}/10 booth (${progressPercent}%). 
+                - Chi tiết 10 Booth trải nghiệm:
+                  1. Mystical Yukata Shop 👘: Thuê Yukata 50k/h dạo phố, may riêng 750k/bộ. AI Kiosk quét mặt gợi ý mẫu phù hợp. Nhận huy hiệu Sakura.
+                  2. Finger Math 🧮: Trải nghiệm tính nhẩm ngón tay -> Nhận móc khóa Origami.
+                  3. Quà Lưu Niệm 🎁: Chụp hình cùng bùa may Omamori -> Nhận quạt giấy vẽ tay.
+                  4. Tháp Sáng Tạo 🗼: Tạo hình truyện tranh manga ngắn có thoại -> Nhận tập Manga lưu niệm.
+                  5. Workshop Đất Sét 🎨: Nặn sushi đất sét tự khô siêu nhẹ -> Nhận mô hình sushi mang về.
+                  6. Khu Check-in 📌: Tra cứu mã QR định danh -> Nhận Voucher Gigamall 20k.
+                  7. Quầy Thức Ăn 🍣: Ăn Takoyaki hoặc Taiyaki -> Nhận Voucher ẩm thực giảm 10%.
+                  8. Quầy Quần Áo 🧥: Khoác thử áo Happi rực rỡ -> Nhận túi thơm hoa đào rơi.
+                  9. Workshop Matcha 🍵: Tự đánh bọt Matcha bằng chổi Chasen tre -> Nhận ly trà Matcha.
+                  10. Quầy Trò Chơi 🎯: Thử tài vớt cá vàng bằng vợt giấy hoặc ném vòng -> Nhận bóng nước.
+                - Nhà Ma Huyết Anh Đào 👹: Cốt truyện bi kịch năm 1944 của người vợ Chiyo tự tử do tin báo tử nhầm của bưu tá. Người tham gia đóng vai bưu tá đem thư sự thật giải tỏa oán niệm. 3 kết cục tương tác (Bad, True, Secret Ending). Vé cặp đôi 65k, vé nhóm 50k/người. Cú pháp QR chuyển khoản: MB BANK 02871003839 (Gigamall).
+                - Cơ chế AI quét ảnh: Khi khách gửi ảnh hoàn thành tại các booth, hệ thống AI Kiosk Checker phân tích phổ màu (Hồng Sakura, xanh matcha, da người) để chống ảnh giả mạo rồi mới cho phép bấm nút check-in.
+
+                Hãy trả lời thật chân thành, ngắn gọn (trong 2-4 câu, trừ khi khách hàng hỏi chuyên sâu), hướng dẫn cụ thể và thân mật.`;
+
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKeyToUse}`;
+
+                // Gửi yêu cầu với cơ chế tự động thử lại nếu nghẽn mạng (Exponential Backoff)
+                const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
+                    try {
+                        const res = await fetch(url, options);
+                        if (!res.ok) {
+                            if (retries > 0) {
+                                await new Promise(r => setTimeout(r, delay));
+                                return fetchWithRetry(url, options, retries - 1, delay * 2);
+                            }
+                            throw new Error("HTTP error " + res.status);
+                        }
+                        return res;
+                    } catch (e) {
+                        if (retries > 0) {
+                            await new Promise(r => setTimeout(r, delay));
+                            return fetchWithRetry(url, options, retries - 1, delay * 2);
+                        }
+                        throw e;
+                    }
+                };
+
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: messageText }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] }
+                    })
+                });
+
+                const data = await response.json();
+                responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+                if (!responseText) throw new Error("Empty response");
+
+            } catch (err) {
+                // Sử dụng hàm đối soát Heuristic từ khóa cục bộ thông minh nếu mất kết nối hoặc hết hạn API key
+                responseText = getAiResponse(messageText);
+            } finally {
+                // Xóa hiệu ứng chờ phản hồi
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                // Hiển thị câu trả lời thông minh chính xác của AI
                 container.insertAdjacentHTML('beforeend', `
-                    <div class="bg-pink-50 p-3 rounded-2xl max-w-[80%] text-gray-700 text-left">
-                        ${ans}
+                    <div class="bg-pink-50 p-3 rounded-2xl max-w-[80%] text-gray-700 text-left animate-fadeIn">
+                        ${responseText}
                     </div>
                 `);
                 container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-            }, 800);
+            }
         }
 
         function getAiResponse(msg) {
             const lowercase = msg.toLowerCase();
             
-            if (lowercase.includes('đăng ký') || lowercase.includes('vé') || lowercase.includes('vào cổng')) {
-                return "Chào bạn, Lễ hội Sakura 2026 tại Gigamall hoàn toàn <strong>VÀO CỬA MIỄN PHÍ</strong>! Riêng một số hoạt động phụ trợ như Workshop, Thuê Yukata hoặc vé Nhà Ma sẽ thu phí dịch vụ nhỏ (từ 50.000đ - 120.000đ). Mọi thông tin xác nhận vé và mã QR sẽ được gửi trực tiếp qua Email đã đăng ký của bạn nhé!";
+            if (lowercase.includes('đăng ký') || lowercase.includes('vé') || lowercase.includes('vào cổng') || lowercase.includes('chi phí') || lowercase.includes('tiền')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">🎟️ THÔNG TIN VÉ VÀ ĐĂNG KÝ THAM GIA:</p>
+                        <p>Chào bạn! Lễ hội hoa anh đào <strong>"Cung Đường Vàng Sakura 2026"</strong> tổ chức tại Sảnh Phạm Văn Đồng - TTTM Gigamall hoàn toàn <strong>VÀO CỬA TỰ DO VÀ MIỄN PHÍ!</strong></p>
+                        <p>Tuy nhiên, một số hoạt động trải nghiệm đặc thù có áp dụng mức phí hỗ trợ đạo cụ và dịch vụ như sau:</p>
+                        <ul class="list-disc list-inside space-y-1 pl-2 text-gray-600">
+                            <li><strong>Thuê Yukata dạo phố:</strong> 50.000 VND / giờ (Mystical Yukata Shop).</li>
+                            <li><strong>Đặt may Yukata thiết kế riêng:</strong> 750.000 VND / bộ thành phẩm truyền thống.</li>
+                            <li><strong>Vé Nhà Ma Huyết Anh Đào:</strong> 65.000 VND (Vé Cặp đôi) | 50.000 VND / người (Vé Nhóm từ 1-5 người).</li>
+                            <li><strong>Workshop vẽ Digital Art Anime:</strong> 120.000 VND / lượt học.</li>
+                            <li><strong>Workshop pha trà Matcha:</strong> 70.000 VND / lượt trải nghiệm thực tế.</li>
+                            <li><strong>Workshop nặn đất sét Sushi:</strong> 50.000 VND / lượt nặn mang quà về.</li>
+                        </ul>
+                        <p class="text-xs text-rose-500 font-bold">⚠️ Lưu ý an toàn: Đối với các hoạt động có phí, bạn vui lòng chuyển khoản theo cú pháp QR được hiển thị. Hệ thống đối soát Napas247 sẽ kiểm tra số dư và tự động gửi vé điện tử QR độc quyền trực tiếp về địa chỉ Email đăng ký của bạn!</p>
+                    </div>
+                `;
             }
-            if (lowercase.includes('chuyển khoản') || lowercase.includes('thanh toán') || lowercase.includes('tài khoản')) {
-                return "Bạn vui lòng quét mã QR chuyển khoản thực tế trên hệ thống. Sau khi chuyển xong, hệ thống đối soát tự động kết nối cổng Napas247 sẽ kiểm tra và khớp lệnh mã định danh của bạn rồi mới gửi vé qua Email!";
-            }
-            if (lowercase.includes('yukata') || lowercase.includes('thuê đồ')) {
-                return "Trải nghiệm Yukata có 2 mục lớn:<br>1. <strong>Design</strong>: Tự vẽ mẫu online và đặt may với giá 750k/bộ.<br>2. <strong>Rent</strong>: Thuê dạo phố sảnh Phạm Văn Đồng với giá cực hời 50.000đ/giờ. Có Kiosk AI quét mặt ghép hình tại gian hàng Mystical Yukata Shop!";
-            }
-            if (lowercase.includes('nhà ma') || lowercase.includes('huyết anh đào')) {
-                return "Nhà ma 'Lời nguyền huyết anh đào: Chồng của tôi đâu?' nằm ngay bên phải cổng vào. Giá vé là 50k cho nhóm và 65k cho cặp đôi. Trò chơi có 3 kết cục tương tác dựa vào sự lựa chọn giải đố lá thư của bạn!";
-            }
-            if (lowercase.includes('game') || lowercase.includes('booth') || lowercase.includes('gian hàng') || lowercase.includes('phần thưởng')) {
-                return "Bạn có thể mở Tab <strong>Bản Đồ Booth</strong> để xem vị trí 10 gian hàng. Ghé thăm các trạm, hoàn thành nhiệm vụ đơn giản như nặn đất sét, giải toán nhanh, làm Matcha rồi tải ảnh check-in lên. AI Kiosk sẽ kiểm tra xem hình ảnh của bạn có đúng chủ đề hoa anh đào và bối cảnh gian hàng hay không để duyệt quà!";
-            }
-            if (lowercase.includes('văn hóa') || lowercase.includes('bài viết')) {
-                return "Góc Văn Hóa Nhật Bản có rất nhiều câu chuyện hay về Sushi, Yukata, Lễ hội Hanami ngắm hoa. Bạn cũng có thể bấm nút <strong>Đóng Góp Bài Viết Mới</strong> để tự chia sẻ kiến thức của mình và tích thêm điểm thưởng!";
-            }
-            if (lowercase.includes('thời gian') || lowercase.includes('địa điểm') || lowercase.includes('ở đâu')) {
-                return "Lễ hội diễn ra liên tục từ <strong>21/03 đến 03/05/2026</strong> ngay tại <strong>Sảnh Phạm Văn Đồng - TTTM Gigamall Thủ Đức</strong> (Mở cửa từ 9:00 - 22:00 hàng ngày). Rất hân hạnh được đón tiếp bạn!";
-            }
-            if (lowercase.includes('thông tin') || lowercase.includes('cá nhân') || lowercase.includes('mã số') || lowercase.includes('mã định danh')) {
-                return `Mã định danh duy nhất của bạn là: <strong>${currentUser ? currentUser.code : 'Chưa đăng ký'}</strong>. Bạn có thể xem toàn bộ thông tin tài khoản, email nhận vé và QR code kiểm tra tại quầy lễ tân bằng cách nhấp vào ô tài khoản màu hồng ở góc trên bên phải màn hình!`;
+            
+            if (lowercase.includes('lịch trình') || lowercase.includes('giai đoạn') || lowercase.includes('hoạt động') || lowercase.includes('thời gian') || lowercase.includes('ở đâu') || lowercase.includes('địa điểm') || lowercase.includes('mấy giờ')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">📅 LỊCH TRÌNH VÀ THỜI GIAN HOẠT ĐỘNG:</p>
+                        <p>Lễ hội diễn ra liên tục từ ngày <strong>21/03/2026 đến hết ngày 03/05/2026</strong> tại <strong>Sảnh Phạm Văn Đồng - TTTM Gigamall</strong> (240-242 Phạm Văn Đồng, P. Hiệp Bình Chánh, Thủ Đức, TP.HCM).</p>
+                        <p>Lễ hội được chia thành 4 giai đoạn lớn với các hoạt động điểm nhấn độc đáo:</p>
+                        <ol class="list-decimal list-inside space-y-1.5 pl-2 text-gray-600">
+                            <li><strong>GĐ 1 (21/03 - 29/03) - Lễ Hội Ngắm Hoa Hanami:</strong> Khai mạc, biểu diễn thời trang diễu hành Cosplay Catwalk rực rỡ, đồng diễn võ thuật Aikido hào hùng, giao lưu cùng Robot AI tương tác.</li>
+                            <li><strong>GĐ 2 (30/03 - 12/04) - Lễ Hội Ẩm Thực:</strong> Sân chơi đường phố sầm uất, hoạt động nặn sushi đất sét, hướng dẫn đánh Matcha Chasen trà đạo Nhật Bản.</li>
+                            <li><strong>GĐ 3 (13/04 - 27/04) - Lễ Hội Văn Hóa:</strong> Cuộc thi tính nhẩm Finger Math thông thái cho bé, trình diễn trống trận Taiko vang dội, fan meeting giao lưu cùng các coser nổi tiếng.</li>
+                            <li><strong>GĐ 4 (28/04 - 03/05) - Lễ Hội Hi-Tech Tương Lai:</strong> Soi da tư vấn sắc đẹp bằng máy quét Tokyo, robot AI múa quạt truyền thống mềm dẻo, chung kết trao giải cuộc đấu Cosplay.</li>
+                        </ol>
+                        <p class="text-xs text-gray-500">⏰ Khung giờ hoạt động của TTTM: Thứ 2 - Thứ 6 (9:30 - 22:00) | Thứ 7 - Chủ Nhật (9:00 - 22:00).</p>
+                    </div>
+                `;
             }
 
-            return "Cảm ơn thắc mắc của bạn! Nếu bạn muốn tìm hiểu kỹ hơn về sơ đồ bố trí sảnh, giá vé thuê đồ hay giờ mở màn Liveshow diễu hành Cosplay, hãy thử tìm các từ khóa ngắn như 'Yukata', 'Nhà ma', 'Đăng ký', 'Thời gian' nhé!";
+            if (lowercase.includes('yukata') || lowercase.includes('quần áo') || lowercase.includes('trang phục') || lowercase.includes('mặc') || lowercase.includes('may')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">👘 TRẢI NGHIỆM VÀ THIẾT KẾ YUKATA TRUYỀN THỐNG:</p>
+                        <p>Tại Tab <strong>Trải Nghiệm Yukata</strong> trên website, bạn có 2 hình thức tham gia vô cùng độc đáo:</p>
+                        <ul class="list-disc list-inside space-y-1 pl-2 text-gray-600">
+                            <li><strong>May Yukata thiết kế riêng (Design):</strong> Tự tay lựa chọn màu sắc (Hồng Sakura, Xanh Indigo, Đỏ thẫm, Tím Lavender, Trắng Fuji), họa tiết in chìm (Hoa anh đào, Cá chép, Sóng biển, Hạc bay), đai thắt Obi thủ công và vải Cotton/Lụa mộc mạc để gửi lên ban tổ chức cắt may với giá 750k/bộ.</li>
+                            <li><strong>Thuê Yukata dạo sảnh (Rent):</strong> Sử dụng hệ thống máy quét gương mặt <strong>AI Kiosk</strong>, tải ảnh chân dung rõ nét lên để AI phân tích sắc thái gương mặt, đề xuất phối đồ và phụ kiện phù hợp nhất. Giá thuê dạo phố chỉ 50k/giờ tại Mystical Yukata Shop!</li>
+                        </ul>
+                        <p>Trang web cũng tích hợp sẵn các video hướng dẫn chi tiết cách xếp vạt áo và thắt nơ lụa Obi chuẩn Nhật Bản dành cho cả nam và nữ để bạn tự tin sải bước chụp hình sảnh ngoài!</p>
+                    </div>
+                `;
+            }
+
+            if (lowercase.includes('nhà ma') || lowercase.includes('huyết anh đào') || lowercase.includes('lời nguyền') || lowercase.includes('chồng')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-red-600">💀 NHÀ MA "LỜI NGUYỀN HUYẾT ANH ĐÀO: CHỒNG CỦA TÔI ĐÂU?":</p>
+                        <p><strong>Cốt truyện oán khốc:</strong> Năm 1944, người chồng Kazuo ra chiến trận xa xôi. Người vợ Chiyo tuyệt vọng thắt cổ tự vẫn trên cây hoa đào sau vườn vì nhận tin báo tử sai từ bưu tá. Linh hồn cô vẫn vất vưởng trong căn nhà hoang để gào thét hỏi tìm chồng.</p>
+                        <p><strong>Vai diễn của bạn:</strong> Bạn sẽ hóa thân thành người bưu tá năm xưa, dũng cảm bước vào căn mê cung hoang phế để tìm kiếm sự thật và đưa lá thư minh oan chuộc lỗi lầm.</p>
+                        <p><strong>Cơ chế 3 Kết Cục (Interactive Ending):</strong></p>
+                        <ul class="list-disc list-inside pl-2 text-xs text-gray-600 space-y-0.5">
+                            <li><strong class="text-red-500">Bad Ending:</strong> Sợ hãi chạy trốn nửa chừng và kẹt lại vĩnh viễn ở căn nhà ma quái.</li>
+                            <li><strong class="text-green-600">True Ending:</strong> Đưa đúng lá thư sự thật giải tỏa uất ức giúp Chiyo siêu thoát thanh thản.</li>
+                            <li><strong class="text-amber-500">Secret Ending:</strong> Tìm thấy di vật thất lạc của người chồng để gia đình họ đoàn tụ vĩnh cửu.</li>
+                        </ul>
+                        <p class="text-xs text-gray-500">💵 Vé Cặp đôi: 65k | Vé Nhóm (1-5 người): 50k/người. Thực hiện chuyển khoản đúng cú pháp QR hiển thị trên Tab Nhà Ma để hệ thống xuất vé Email nhé!</p>
+                    </div>
+                `;
+            }
+
+            if (lowercase.includes('game') || lowercase.includes('booth') || lowercase.includes('gian hàng') || lowercase.includes('bản đồ') || lowercase.includes('quà') || lowercase.includes('phần thưởng') || lowercase.includes('check-in') || lowercase.includes('quét')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">🗺️ BẢN ĐỒ BOOTH VÀ QUY TRÌNH CHECK-IN NHẬN QUÀ:</p>
+                        <p>Hãy truy cập Tab <strong>Bản Đồ Booth</strong> để ngắm nhìn sơ đồ thiết kế trực quan tại sảnh ngoài Gigamall Phạm Văn Đồng. Lễ hội sắp xếp 10 booth trải nghiệm độc đáo:</p>
+                        <div class="max-h-40 overflow-y-auto border p-2 rounded-lg bg-gray-50 text-xs space-y-1 text-gray-600">
+                            <p><strong>1. Mystical Yukata Shop:</strong> Thử đồ & AI quét mặt gợi ý -> Tặng huy hiệu cài áo.</p>
+                            <p><strong>2. Finger Math:</strong> Tính toán nhanh 10 bài toán bằng tay -> Tặng móc khóa Origami.</p>
+                            <p><strong>3. Quà Lưu Niệm:</strong> Chụp ảnh cùng bùa may mắn Omamori -> Tặng hộp quạt giấy vẽ tay.</p>
+                            <p><strong>4. Tháp Sáng Tạo:</strong> Thiết kế truyện manga ngắn chèn thoại -> Tặng cuốn Manga kỉ niệm.</p>
+                            <p><strong>5. Workshop Nặn Đất Sét:</strong> Tạo hình sushi thu nhỏ -> Tặng mô hình sushi đất sét.</p>
+                            <p><strong>6. Khu Check-in:</strong> Điểm danh mã định danh -> Tặng voucher mua sắm 20k.</p>
+                            <p><strong>7. Quầy Thức Ăn:</strong> Thưởng thức nếm bánh Takoyaki -> Tặng voucher ăn uống giảm 10%.</p>
+                            <p><strong>8. Quầy Quần Áo:</strong> Thử khoác áo Happi sành điệu -> Tặng túi thơm hoa đào.</p>
+                            <p><strong>9. Workshop Matcha:</strong> Đánh bọt chổi tre Matcha -> Tặng ly trà Matcha mát lạnh.</p>
+                            <p><strong>10. Quầy Trò Chơi:</strong> Ném vòng trúng mục tiêu -> Tặng bong bóng nước sặc sỡ.</p>
+                        </div>
+                        <p><strong>🤖 Cơ chế duyệt ảnh thông minh bằng AI Kiosk Checker:</strong> Khi hoàn thành nhiệm vụ tại mỗi booth, bạn hãy chụp ảnh hoạt động thực tế của mình và tải lên hệ thống. AI của Gigamall sẽ quét phân tích độ dốc vân cạnh, cấu trúc tiêu điểm sáng tối và tỷ lệ cơ mặt/vải để đảm bảo đó là ảnh chụp hoạt động thực tế tại booth, loại bỏ mọi ảnh phong cảnh ngoài trời lạc đề trước khi mở khóa cho bạn ấn Check-in nhận quà!</p>
+                    </div>
+                `;
+            }
+
+            if (lowercase.includes('cộng đồng') || lowercase.includes('cosplay') || lowercase.includes('manga') || lowercase.includes('truyện') || lowercase.includes('thí sinh') || lowercase.includes('bình chọn') || lowercase.includes('one-shot')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">🎭 DIỄN ĐÀN CỘNG ĐỒNG - COSPLAY VÀ MANGA:</p>
+                        <p>Nơi kết nối và vinh danh sức sáng tạo tuyệt đỉnh của các bạn trẻ tham dự lễ hội:</p>
+                        <ul class="list-disc list-inside space-y-1 pl-2 text-gray-600 text-xs">
+                            <li><strong>Cosplay Contest:</strong> Cùng ngắm nhìn và bình chọn cho các thí sinh xuất sắc như: <em>Minh Thư</em> (Coser Sakura - 421 phiếu), <em>Hoàng Long</em> (Naruto - 310 phiếu), <em>Gia Bảo</em> (Conan - 298 phiếu), <em>Phương Thảo</em> (Nezuko - 541 phiếu đang dẫn đầu) và <em>Hải Đăng</em> (Luffy - 388 phiếu).</li>
+                            <li><strong>Manga Creative 1-Shot:</strong> Khám phá truyện ngắn do khách hàng vẽ tại booth như: <em>"Sakura & Kero: Phá giải mê lộ Tháp Sáng Tạo"</em> (Khánh Vân - 121 vote) hay tác phẩm kiếm sĩ <em>"Huyền thoại bảo kiếm tuyết trắng Fuji"</em> (Nhật Minh - 95 vote).</li>
+                        </ul>
+                        <p>Hãy click trực tiếp vào mỗi thí sinh để bình chọn tăng phiếu thưởng và trò chuyện trực tiếp tại Chatbox hội nhóm Make-up và Edit truyện bên phải màn hình để thảo luận cùng cộng đồng nhé!</p>
+                    </div>
+                `;
+            }
+
+            if (lowercase.includes('văn hóa') || lowercase.includes('bài viết') || lowercase.includes('nét đẹp') || lowercase.includes('đọc')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">🎎 GÓC VĂN HÓA TRUYỀN THỐNG NHẬT BẢN:</p>
+                        <p>Chào bạn, chúng tôi đang lưu trữ 3 tác phẩm nghiên cứu văn hóa sâu sắc viết bởi nghệ nhân và cộng đồng:</p>
+                        <ol class="list-decimal list-inside space-y-1 pl-2 text-gray-600">
+                            <li><strong>Ẩm thực:</strong> "Nghệ thuật Sushi - Linh hồn quốc thực Nhật Bản" bởi Nghệ nhân Saito nói về sự bùng nổ của dấm Edo.</li>
+                            <li><strong>Trang phục:</strong> "Ý nghĩa tà áo Yukata truyền thống" bởi Thái Bình lý giải nét khác biệt thoải mái so với Kimono.</li>
+                            <li><strong>Lễ hội:</strong> "Ngắm hoa Hanami - Triết lý vô thường" bởi Hương Giang bàn luận về phong tục thưởng lãm ngàn năm tuổi.</li>
+                        </ol>
+                        <p>Bạn cũng có thể click vào nút <strong>"✍️ Đóng Góp Bài Viết Mới"</strong> để tự viết bài chia sẻ kiến thức của mình. Toàn bộ nội dung gửi lên sẽ được hệ thống <strong>AI Gemini Safeguard kiểm duyệt ngôn từ, rà soát từ khóa văn hóa chặt chẽ và chấm điểm thông minh</strong> trước khi chính thức phê duyệt xuất bản lên cổng thông tin!</p>
+                    </div>
+                `;
+            }
+
+            if (lowercase.includes('thông tin') || lowercase.includes('cá nhân') || lowercase.includes('mã số') || lowercase.includes('mã định danh') || lowercase.includes('tên') || lowercase.includes('sđt') || lowercase.includes('email') || lowercase.includes('pass') || lowercase.includes('hộ chiếu')) {
+                return `
+                    <div class="space-y-2 text-left">
+                        <p class="font-bold text-pink-600">🎟️ THẺ THÔNG HÀNH / HỘ CHIẾU SAKURA CỦA BẠN:</p>
+                        <p>Hiện tại bạn đang dạo bước lễ hội dưới danh nghĩa thành viên chính thức:</p>
+                        <div class="p-3 bg-pink-50 rounded-xl border border-pink-100 text-xs text-gray-700 space-y-1">
+                            <p>👤 Họ và Tên: <strong>${currentUser ? currentUser.name : 'Khách chưa đăng ký'}</strong></p>
+                            <p>🔑 Mã số định danh: <strong class="font-mono text-pink-600">${currentUser ? currentUser.code : 'Chưa cấp'}</strong></p>
+                            <p>📧 Email nhận vé: <strong>${currentUser ? currentUser.email : 'Chưa nhập'}</strong></p>
+                            <p>📞 SĐT liên hệ: <strong>${currentUser ? currentUser.phone : 'Chưa nhập'}</strong></p>
+                        </div>
+                        <p class="text-xs text-gray-500">💡 Mẹo nhỏ: Bạn luôn có thể xem chi tiết tấm hộ chiếu xinh đẹp này bằng cách click vào **ô tài khoản màu hồng ở góc trên bên phải màn hình (Header)**. Hãy mang mã số định danh này tới Quầy Check-in Gigamall để đối chiếu đổi các món quà thân thiện với môi trường nhé!</p>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="space-y-1 text-left">
+                    <p>Cảm ơn thắc mắc của bạn! Trợ lý AI có thể giải đáp tường tận toàn bộ nội dung trong sảnh sự kiện.</p>
+                    <p class="text-xs text-pink-600 font-bold">Hãy thử hỏi tôi về các từ khóa sau để nhận thông tin cực kỳ chi tiết:</p>
+                    <div class="flex flex-wrap gap-1.5 pt-1.5">
+                        <span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-[10px] font-bold">"Lịch trình 4 giai đoạn"</span>
+                        <span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-[10px] font-bold">"Cách check-in 10 booth"</span>
+                        <span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-[10px] font-bold">"3 kết cục của Nhà ma"</span>
+                        <span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-[10px] font-bold">"Bình chọn Cosplay"</span>
+                        <span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-[10px] font-bold">"AI quét ảnh booth"</span>
+                        <span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-[10px] font-bold">"Thông tin hộ chiếu"</span>
+                    </div>
+                </div>
+            `;
         }
 
         // --- 14. INITS ON COMMUNITY CHAT ---
